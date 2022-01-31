@@ -2,3 +2,4 @@ bin
 obj
 .vs
 local.settings.json
+publish.zip
