@@ -20,7 +20,7 @@ namespace TestFxnApp
         }
 
         [FunctionName("HttpTriggerFunction")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "GET", "POST")]
             HttpRequest req,
             ILogger log)
@@ -32,6 +32,13 @@ namespace TestFxnApp
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
+
+            string keyName = "AppConfigKey";
+            string message = _config[keyName];
+            log.LogInformation($"{keyName}: {message}");
+            string keyNameSecret = "KeyVaultSecretKey";
+            string messageSecret = _config[keyNameSecret];
+            log.LogInformation($"{keyNameSecret}: {messageSecret}");
 
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."

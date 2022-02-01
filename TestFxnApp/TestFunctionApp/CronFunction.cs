@@ -14,7 +14,7 @@ namespace TestFxnApp
         }
 
         [FunctionName("CronFunction")]
-        public void Run([TimerTrigger("*/60 * * * * *")]TimerInfo myTimer, ILogger log)
+        public void Run([TimerTrigger("*/20 * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             string keyName = "AppConfigKey";
