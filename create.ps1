@@ -117,6 +117,9 @@ az functionapp config appsettings set `
 Write-Host -ForegroundColor Yellow "Fetching function app managed identity id"
 $functionPrincipalId = az functionapp identity show -n $functionAppName -g $RESOURCE_GROUP --query principalId -o tsv
 
+Write-Host -ForegroundColor Yellow "Fetching current user identity id"
+$currentUserId = az ad signed-in-user show --query objectId -o tsv
+
 Write-Host -ForegroundColor Yellow "Fetching App Configuration Data Reader Role info"
 $appConfigDataReaderRoleName = $(az role definition list --name "App Configuration Data Reader" --query [0].name -o tsv)
 $appConfigScope = "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.AppConfiguration/configurationStores/$appConfigName"
@@ -125,6 +128,13 @@ Write-Host -ForegroundColor Yellow "Creating Role Assignment for function app in
 az role assignment create `
     --assignee-object-id $functionPrincipalId `
     --assignee-principal-type "ServicePrincipal" `
+    --role $appConfigDataReaderRoleName `
+    --scope $appConfigScope
+
+Write-Host -ForegroundColor Yellow "Creating Role Assignment for current user in App Configuration"
+az role assignment create `
+    --assignee-object-id $currentUserId `
+    --assignee-principal-type "User" `
     --role $appConfigDataReaderRoleName `
     --scope $appConfigScope
 
@@ -141,7 +151,6 @@ az role assignment create `
     --scope $kvScope
 
 Write-Host -ForegroundColor Yellow "Creating Role Assignment for current user in Key Vault"
-$currentUserId = az ad signed-in-user show --query objectId -o tsv
 az role assignment create `
     --assignee-object-id $currentUserId `
     --assignee-principal-type "User" `
