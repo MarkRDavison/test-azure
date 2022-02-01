@@ -183,4 +183,4 @@ az functionapp deployment source config-zip `
     --src $zipName
 
 $sw.Stop()
-Write-Host 'Command ran in' $sw.Elapsed.ToString("mm\:ss") -ForegroundColor Green
+Write-Host 'Script ran in' $sw.Elapsed.ToString("mm\:ss") -ForegroundColor Green
