@@ -7,11 +7,18 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace TestFxnApp
 {
-    public static class HttpTriggerFunction
+    public class HttpTriggerFunction
     {
+        private readonly IConfiguration _config;
+        public HttpTriggerFunction(IConfiguration config)
+        {
+            _config = config;
+        }
+
         [FunctionName("HttpTriggerFunction")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "GET", "POST")]
